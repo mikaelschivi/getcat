@@ -20,30 +20,33 @@ def createFolder(path):
             raise IOError('%s: %s' % (path, exception.strerror))
         return None
 
+def nameCat(imtype: str):
+    n=0
+    while os.path.exists(f'../getcat/img/cat{n}.jpeg') or os.path.exists(f'../getcat/img/cat{n}.png') == True:
+        n+=1
+    return f'cat{n}.{imtype}'
 
-def downloadCat(name):
-    print(f'[{name}] started download function')
+def downloadCat():
     r = requests.get(url)
     hdr = r.headers['content-type']
 
     if hdr == 'image/jpeg':
-        open(f'{path}cat{name}.jpeg', 'wb').write(r.content)
-        print(f'downloading cat{name}')
+        open(path+nameCat('jpeg'), 'wb').write(r.content)
+        print(f'downloading jpeg cat')
     elif hdr == 'image/png':
-        open(f'{path}cat{name}.png', 'wb').write(r.content)
-        print(f'downloading cat{name}')
+        open(path+nameCat('png'), 'wb').write(r.content)
+        print(f'downloading png cat')
     else:
         print('\n NEW TYPE FOUND',type(hdr),'\n')
-        
+
 if __name__ == '__main__':
     createFolder(path)
     num = int(input('how many cute pics u want? '))
 
     try:
-        for n in range(num):    
-            thread = threading.Thread(group=None,target=downloadCat,args=(n,))
+        for n in range(num):
+            thread = threading.Thread(target=downloadCat)
             thread.start()
-            thread.join()
-
+        print('fetching...')
     except requests.exceptions.HTTPError() as err:
-        raise SystemExit(err)
+        raise SystemExit(err)   
