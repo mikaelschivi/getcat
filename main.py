@@ -23,7 +23,7 @@ def downloadPic(name):
         print('\n NEW TYPE FOUND',type(hdr),'\n')
         
 if __name__ == '__main__':
-    num = 10 #int(input('number of downloads:'))
+    num = int(input('number of downloads:'))
 
     try:
         for n in range(num):    
