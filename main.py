@@ -7,30 +7,32 @@ import threading
 import requests
 
 url = "https://cataas.com/cat"
-r = requests.get(url)
 
 def downloadPic(name):
-    print('fetching...')
+    print('started downloading function')
+    r = requests.get(url)
     hdr = r.headers['content-type']
 
     if hdr == 'image/jpeg':
-        open(f"pic{name}.jpeg", 'wb').write(r.content)
-        print(f'DOWNLOADING [ID {name}] [TYPE {hdr}]...')
+        open(f'pic{name}.jpeg', 'wb').write(r.content)
+        print(f'downloading pic{name}')
     elif hdr == 'image/png':
-        open(f"pic{name}.png", 'wb').write(r.content)
-        print(f'DOWNLOADING [ID {name}] [TYPE {hdr}]...')
+        open(f'pic{name}.png', 'wb').write(r.content)
+        print(f'downloading pic{name}')
     else:
-        print(type(hdr))
+        print('\n NEW TYPE FOUND',type(hdr),'\n')
         
 if __name__ == '__main__':
     num = 10 #int(input('number of downloads:'))
 
-# FIX THIS SHIT
     try:
         for n in range(num):    
-            
-            thread = threading.Thread(downloadPic(n),args=(n,))
+            print(n)    
+            thread = threading.Thread(group=None,target=downloadPic,args=(n,))
             thread.start()
+            thread.join()
 
     except requests.exceptions.HTTPError() as err:
-        raise SystemExit(err)   
+        raise SystemExit(err)
+    except requests.exceptions.ConnectionError() as err:
+        raise SystemExit(err)
