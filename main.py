@@ -1,28 +1,36 @@
 #!/usr/bin/env python3
 from asyncio import exceptions
 from logging import raiseExceptions
-from socket import timeout
 from urllib.error import HTTPError
+
+import threading
 import requests
 
-inp = int(input('number of downloads:'))
 url = "https://cataas.com/cat"
+r = requests.get(url)
 
-print('fetching...')
-for Id in range(inp):
-    try:
-        r = requests.get(url,timeout=5)
-        r.raise_for_status()
+def downloadPic(name):
+    print('fetching...')
+    hdr = r.headers['content-type']
+
+    if hdr == 'image/jpeg':
+        open(f"pic{name}.jpeg", 'wb').write(r.content)
+        print(f'DOWNLOADING [ID {name}] [TYPE {hdr}]...')
+    elif hdr == 'image/png':
+        open(f"pic{name}.png", 'wb').write(r.content)
+        print(f'DOWNLOADING [ID {name}] [TYPE {hdr}]...')
+    else:
+        print(type(hdr))
         
-        hdr = r.headers['content-type']
-        if hdr == 'image/jpeg':
-            open(f"pic{Id}.jpeg", 'wb').write(r.content)
-            print(f'downloading {hdr}...')
-        else:
-            open(f"pic{Id}.png", 'wb').write(r.content)
-            print(f'downloading {hdr}...')
+if __name__ == '__main__':
+    num = 10 #int(input('number of downloads:'))
 
-        print('ok')
+# FIX THIS SHIT
+    try:
+        for n in range(num):    
+            
+            thread = threading.Thread(downloadPic(n),args=(n,))
+            thread.start()
 
     except requests.exceptions.HTTPError() as err:
-        raise SystemExit(err)
+        raise SystemExit(err)   
