@@ -15,7 +15,7 @@ def createFolder(path):
                 pass                
             else:
                 os.makedirs(path)
-                print('created directory for storing.')
+                print('created directory for storing cute pics.')
         except IOError as exception:
             raise IOError('%s: %s' % (path, exception.strerror))
         return None
@@ -37,7 +37,7 @@ def downloadCat(name):
         
 if __name__ == '__main__':
     createFolder(path)
-    num = int(input('number of downloads: '))
+    num = int(input('how many cute pics u want? '))
 
     try:
         for n in range(num):    
@@ -46,6 +46,4 @@ if __name__ == '__main__':
             thread.join()
 
     except requests.exceptions.HTTPError() as err:
-        raise SystemExit(err)
-    except requests.exceptions.ConnectionError() as err:
         raise SystemExit(err)
